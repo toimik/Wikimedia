@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>Toimik.Wikimedia</AssemblyName>
+    <PackageVersion>0.1.0</PackageVersion>
+    <Authors>Nurhafiz</Authors>
+    <Version>0.1.0</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Company>Toimik</Company>
+    <Description>
+      Wikimedia Downloads processing tools.
+
+      Visit Project Site for documentation.
+    </Description>
+    <Copyright>nurhafiz@hotmail.sg</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/toimik/Wikimedia</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/toimik/Wikimedia.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>wikimedia wikipedia wikimedia-downloads wikimedia-dumps externallinks external-links wikimedia-tools</PackageTags>
+    <Product>Toimik.Wikimedia</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
