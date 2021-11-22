@@ -45,7 +45,9 @@ using GZip. Specifically, each is a MySQL script to be fed to a MySQL program, w
 auto-decompress the file to create and populate a table based on the respective schema
 detailed at https://www.mediawiki.org/wiki/Manual:Externallinks_table.
 
-**However, these classes reduce disk space and memory requirements by eliminating the need to use MySQL at all._**
+&nbsp;
+
+_The following classes reduce disk space and memory requirements by eliminating the need to use MySQL at all._
 
 &nbsp;
 #### V129ExternalLinksExtractor.cs
