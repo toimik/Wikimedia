@@ -15,9 +15,9 @@
         {
             var extractor = new V129ExternalLinksExtractor();
 
-            var extractionResults = await extractor.Extract($"{DataDirectory}empty.sql.gz").ToListAsync();
+            var results = await extractor.Extract($"{DataDirectory}empty.sql.gz").ToListAsync();
 
-            Assert.Empty(extractionResults);
+            Assert.Empty(results);
         }
 
         [Fact]

@@ -99,11 +99,11 @@ namespace Toimik.Wikimedia
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var stream = File.OpenRead(path);
-            var extractionResults = Extract(
+            var results = Extract(
                 stream,
                 startIndex,
                 cancellationToken);
-            await foreach (Result extractionResult in extractionResults)
+            await foreach (Result extractionResult in results)
             {
                 yield return extractionResult;
             }
