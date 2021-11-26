@@ -193,7 +193,7 @@ namespace Toimik.Wikimedia
         }
 
         // NOTE: This helper is internal so that implementations for other schemas can use it
-        internal static ExtractedUrl ExtractUrl(string line)
+        internal static ExtractedLink ExtractLink(string line)
         {
             bool isEscapeRequired = false;
             string unescapedUrl;
@@ -217,7 +217,7 @@ namespace Toimik.Wikimedia
             var escapedUrl = isEscapeRequired
                 ? unescapedUrl.Replace("\\'", "'")
                 : unescapedUrl;
-            return new ExtractedUrl(unescapedUrl, escapedUrl);
+            return new ExtractedLink(unescapedUrl, escapedUrl);
         }
 
         protected abstract IEnumerable<string> Extract(string line);

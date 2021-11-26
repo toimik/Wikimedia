@@ -50,21 +50,21 @@ namespace Toimik.Wikimedia
                 line = line[(commaIndex + 2)..];
 
                 // Yield the third column
-                var extractedUrl = ExtractUrl(line);
-                yield return extractedUrl.Escaped;
+                var extractedLink = ExtractLink(line);
+                yield return extractedLink.Escaped;
 
                 // Skip the fourth and fifth columns
                 for (int i = 0; i < 2; i++)
                 {
-                    line = line[(extractedUrl.Unescaped.Length + 1)..];
+                    line = line[(extractedLink.Unescaped.Length + 1)..];
                     commaIndex = line.IndexOf(',');
                     line = line[(commaIndex + 2)..];
-                    extractedUrl = ExtractUrl(line);
+                    extractedLink = ExtractLink(line);
                 }
 
                 // Check if there is any more values. If there is, the first character starts with a
                 // comma. Otherwise, it starts with a semi-colon.
-                line = line[(extractedUrl.Unescaped.Length + 2)..];
+                line = line[(extractedLink.Unescaped.Length + 2)..];
                 if (line.StartsWith(';'))
                 {
                     break;

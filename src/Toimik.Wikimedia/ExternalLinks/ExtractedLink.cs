@@ -16,9 +16,9 @@
 
 namespace Toimik.Wikimedia
 {
-    public struct ExtractedUrl
+    public struct ExtractedLink
     {
-        public ExtractedUrl(string unescaped, string escaped)
+        public ExtractedLink(string unescaped, string escaped)
         {
             Unescaped = unescaped;
             Escaped = escaped;
