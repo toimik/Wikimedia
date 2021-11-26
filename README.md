@@ -48,7 +48,6 @@ detailed at https://www.mediawiki.org/wiki/Manual:Externallinks_table.
 &nbsp;
 
 _The following classes reduce disk space and memory requirements by eliminating the need to use MySQL at all._
-
 &nbsp;
 #### V129ExternalLinksExtractor.cs
 
@@ -56,7 +55,7 @@ _The following classes reduce disk space and memory requirements by eliminating 
 // As the name implies, this extractor extracts from datasets meant for schema version 1.29 and above
 var extractor = new V129ExternalLinksExtractor();
 var path = ... // Path to a local `externallinks.sql.gz`
-await foreach (ExtractionResult extractionResult in extractor.Extract(path))
+await foreach (ExternalLinksExtractor.Result result in extractor.Extract(path))
 {
     ...
 }
@@ -70,7 +69,7 @@ var streamer = new ExternalLinksStreamer(
     new V129ExternalLinksExtractor());
 // This example streams the external URL links from November 2021's English dataset
 var dataset = new Uri("http://dumps.wikimedia.org/enwiki/20211120/enwiki-20211120-externallinks.sql.gz";
-await foreach (ExtractionResult extractionResult in streamer.Stream(dataset))
+await foreach (ExternalLinksExtractor.Result result in streamer.Stream(dataset))
 {
     ...
 }
@@ -80,4 +79,4 @@ await foreach (ExtractionResult extractionResult in streamer.Stream(dataset))
 ##### Known Issue
 Streaming some large files over `HTTPS` may throw a `System.IO.IOException : Received an unexpected EOF or 0 bytes from the transport stream.`
 
-If that happens, a workaround is to use `HTTP` instead.
+If that happens, do consider using `HTTP` instead.
