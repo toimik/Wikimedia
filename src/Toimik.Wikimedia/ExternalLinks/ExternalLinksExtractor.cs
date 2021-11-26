@@ -168,7 +168,7 @@ namespace Toimik.Wikimedia
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         var url = enumerator.Current;
-                        yield return new Result(url, index);
+                        yield return new Result(index, url);
                         index++;
                     }
                     while (enumerator.MoveNext());
@@ -186,7 +186,7 @@ namespace Toimik.Wikimedia
                 foreach (string url in Extract(line))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    yield return new Result(url, index);
+                    yield return new Result(index, url);
                     index++;
                 }
             }
@@ -224,10 +224,10 @@ namespace Toimik.Wikimedia
 
         public struct Result
         {
-            public Result(string url, int index)
+            public Result(int index, string url)
             {
-                Url = url;
                 Index = index;
+                Url = url;
             }
 
             public int Index { get; }
