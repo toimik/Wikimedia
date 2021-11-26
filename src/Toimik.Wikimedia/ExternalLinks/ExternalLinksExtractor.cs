@@ -91,9 +91,9 @@ namespace Toimik.Wikimedia
         /// Optional token to monitor for cancellation request.
         /// </param>
         /// <returns>
-        /// <see cref="ExtractionResult"/>(s).
+        /// <see cref="Result"/>(s).
         /// </returns>
-        public async IAsyncEnumerable<ExtractionResult> Extract(
+        public async IAsyncEnumerable<Result> Extract(
             string path,
             int startIndex = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -103,7 +103,7 @@ namespace Toimik.Wikimedia
                 stream,
                 startIndex,
                 cancellationToken);
-            await foreach (ExtractionResult extractionResult in extractionResults)
+            await foreach (Result extractionResult in extractionResults)
             {
                 yield return extractionResult;
             }
@@ -122,9 +122,9 @@ namespace Toimik.Wikimedia
         /// Optional token to monitor for cancellation request.
         /// </param>
         /// <returns>
-        /// <see cref="ExtractionResult"/>(s).
+        /// <see cref="Result"/>(s).
         /// </returns>
-        public async IAsyncEnumerable<ExtractionResult> Extract(
+        public async IAsyncEnumerable<Result> Extract(
             Stream stream,
             int startIndex = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -168,7 +168,7 @@ namespace Toimik.Wikimedia
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         var url = enumerator.Current;
-                        yield return new ExtractionResult(url, index);
+                        yield return new Result(url, index);
                         index++;
                     }
                     while (enumerator.MoveNext());
@@ -186,7 +186,7 @@ namespace Toimik.Wikimedia
                 foreach (string url in Extract(line))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    yield return new ExtractionResult(url, index);
+                    yield return new Result(url, index);
                     index++;
                 }
             }
@@ -221,5 +221,20 @@ namespace Toimik.Wikimedia
         }
 
         protected abstract IEnumerable<string> Extract(string line);
+
+        public struct Result
+        {
+            public Result(string url, int index)
+            {
+                Url = url;
+                Index = index;
+            }
+
+            public int Index { get; }
+
+            // NOTE: It is observed that this value can be absolute, relative or incorrect (use of
+            // forward slashes) but self-correcting when creating a Uri
+            public string Url { get; }
+        }
     }
 }

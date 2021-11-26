@@ -53,7 +53,7 @@ namespace Toimik.Wikimedia
         /// Optional token to monitor for cancellation request.
         /// </param>
         /// <returns>
-        /// <see cref="ExtractionResult"/>(s).
+        /// <see cref="ExternalLinksExtractor.Result"/>(s).
         /// </returns>
         /// <remarks>
         /// <para>
@@ -63,19 +63,19 @@ namespace Toimik.Wikimedia
         /// </para>
         /// <para>If that happens, use <c>HTTP</c> instead.</para>
         /// </remarks>
-        public async IAsyncEnumerable<ExtractionResult> Stream(
+        public async IAsyncEnumerable<ExternalLinksExtractor.Result> Stream(
             Uri dataset,
             int startIndex = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var stream = await Connect(dataset, cancellationToken);
-            var extractionResults = Extractor.Extract(
+            var results = Extractor.Extract(
                 stream,
                 startIndex,
                 cancellationToken);
-            await foreach (ExtractionResult extractionResult in extractionResults)
+            await foreach (ExternalLinksExtractor.Result result in results)
             {
-                yield return extractionResult;
+                yield return result;
             }
         }
 

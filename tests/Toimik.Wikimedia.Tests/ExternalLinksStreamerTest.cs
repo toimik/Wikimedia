@@ -28,10 +28,10 @@
             };
 
             var startIndex = -1;
-            await foreach (ExtractionResult extractionResult in streamer.Stream(new Uri("http://example.com"), startIndex))
+            await foreach (ExternalLinksExtractor.Result result in streamer.Stream(new Uri("http://example.com"), startIndex))
             {
-                var expectedUrl = expectedUrls[extractionResult.Index];
-                Assert.Equal(expectedUrl, extractionResult.Url);
+                var expectedUrl = expectedUrls[result.Index];
+                Assert.Equal(expectedUrl, result.Url);
             }
         }
 

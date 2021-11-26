@@ -31,10 +31,10 @@
                 "//3a.example.com",
             };
 
-            await foreach (ExtractionResult extractionResult in extractor.Extract($"{DataDirectory}externallinks.sql"))
+            await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql"))
             {
-                var expectedUrl = expectedUrls[extractionResult.Index];
-                Assert.Equal(expectedUrl, extractionResult.Url);
+                var expectedUrl = expectedUrls[result.Index];
+                Assert.Equal(expectedUrl, result.Url);
             }
         }
 
@@ -44,10 +44,10 @@
             var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
 
             var startIndex = 2;
-            await foreach (ExtractionResult extractionResult in extractor.Extract($"{DataDirectory}externallinks.sql", startIndex))
+            await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", startIndex))
             {
-                Assert.Equal(startIndex, extractionResult.Index);
-                Assert.Equal("//3a.example.com", extractionResult.Url);
+                Assert.Equal(startIndex, result.Index);
+                Assert.Equal("//3a.example.com", result.Url);
             }
         }
     }
