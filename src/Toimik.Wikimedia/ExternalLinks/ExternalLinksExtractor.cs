@@ -84,8 +84,8 @@ namespace Toimik.Wikimedia
         /// <param name="path">
         /// The absolute path to a local <c>externallinks.sql.gz</c> file to extract URLs from.
         /// </param>
-        /// <param name="startIndex">
-        /// The index of the URLs to start from.
+        /// <param name="offset">
+        /// The offset of the URLs to start from.
         /// </param>
         /// <param name="cancellationToken">
         /// Optional token to monitor for cancellation request.
@@ -95,13 +95,13 @@ namespace Toimik.Wikimedia
         /// </returns>
         public async IAsyncEnumerable<Result> Extract(
             string path,
-            int startIndex = 0,
+            int offset = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var stream = File.OpenRead(path);
             var results = Extract(
                 stream,
-                startIndex,
+                offset,
                 cancellationToken);
             await foreach (Result extractionResult in results)
             {
@@ -115,8 +115,8 @@ namespace Toimik.Wikimedia
         /// <param name="stream">
         /// The <see cref="Stream"/> of the <c>externallinks.sql.gz</c> file to extract URLs from.
         /// </param>
-        /// <param name="startIndex">
-        /// The index of the URLs to start from.
+        /// <param name="offset">
+        /// The offset of the URLs to start from.
         /// </param>
         /// <param name="cancellationToken">
         /// Optional token to monitor for cancellation request.
@@ -126,12 +126,12 @@ namespace Toimik.Wikimedia
         /// </returns>
         public async IAsyncEnumerable<Result> Extract(
             Stream stream,
-            int startIndex = 0,
+            int offset = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (startIndex < 0)
+            if (offset < 0)
             {
-                startIndex = 0;
+                offset = 0;
             }
 
             using var tempStream = DecompressStreamFactory.CreateDecompressStream(stream);
@@ -140,8 +140,8 @@ namespace Toimik.Wikimedia
             string line;
             var index = 0;
 
-            // Skip, if any, the URLs before the start index
-            if (startIndex > 0)
+            // Skip, if any, the URLs before the offset
+            if (offset > 0)
             {
                 IEnumerator<string> enumerator = null;
                 while ((line = await reader.ReadLineAsync()) != null)
@@ -154,14 +154,14 @@ namespace Toimik.Wikimedia
                     var urls = Extract(line);
                     enumerator = urls.GetEnumerator();
                     while (enumerator.MoveNext()
-                        && index < startIndex)
+                        && index < offset)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         index++;
                     }
                 }
 
-                // Yield, if any, the URLs that are in the same line but are after the start index
+                // Yield, if any, the URLs that are in the same line but are after the offset
                 if (enumerator != null)
                 {
                     do

@@ -21,7 +21,7 @@
         }
 
         [Fact]
-        public async Task StartFromIndexThatIsFirst()
+        public async Task OffsetToFirst()
         {
             var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
             var expectedUrls = new List<string>
@@ -39,14 +39,14 @@
         }
 
         [Fact]
-        public async Task StartFromIndexThatIsLast()
+        public async Task OffsetToLast()
         {
             var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
 
-            var startIndex = 2;
-            await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", startIndex))
+            var offset = 2;
+            await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", offset))
             {
-                Assert.Equal(startIndex, result.Index);
+                Assert.Equal(offset, result.Index);
                 Assert.Equal("//3a.example.com", result.Url);
             }
         }

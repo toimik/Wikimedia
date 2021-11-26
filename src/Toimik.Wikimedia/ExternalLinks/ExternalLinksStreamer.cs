@@ -46,8 +46,8 @@ namespace Toimik.Wikimedia
         /// <param name="dataset">
         /// The <see cref="Uri"/> of the <c>externallinks.sql.gz</c> file to extract URLs from.
         /// </param>
-        /// <param name="startIndex">
-        /// The index of the URLs to start from.
+        /// <param name="offset">
+        /// The offset of the URLs to start from.
         /// </param>
         /// <param name="cancellationToken">
         /// Optional token to monitor for cancellation request.
@@ -65,13 +65,13 @@ namespace Toimik.Wikimedia
         /// </remarks>
         public async IAsyncEnumerable<ExternalLinksExtractor.Result> Stream(
             Uri dataset,
-            int startIndex = 0,
+            int offset = 0,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using var stream = await Connect(dataset, cancellationToken);
             var results = Extractor.Extract(
                 stream,
-                startIndex,
+                offset,
                 cancellationToken);
             await foreach (ExternalLinksExtractor.Result result in results)
             {

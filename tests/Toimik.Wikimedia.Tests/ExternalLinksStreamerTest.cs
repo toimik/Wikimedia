@@ -15,7 +15,7 @@
         private static readonly string DataDirectory = $"Data{Path.DirectorySeparatorChar}";
 
         [Fact]
-        public async Task StartFromIndexThatIsNegative()
+        public async Task OffsetToNegative()
         {
             var httpClient = CreateHttpClient("externallinks.sql");
             var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
@@ -27,8 +27,8 @@
                 "//3a.example.com",
             };
 
-            var startIndex = -1;
-            await foreach (ExternalLinksExtractor.Result result in streamer.Stream(new Uri("http://example.com"), startIndex))
+            var offset = -1;
+            await foreach (ExternalLinksExtractor.Result result in streamer.Stream(new Uri("http://example.com"), offset))
             {
                 var expectedUrl = expectedUrls[result.Index];
                 Assert.Equal(expectedUrl, result.Url);
