@@ -161,7 +161,7 @@ namespace Toimik.Wikimedia
                     }
                 }
 
-                // Yield, if any, the URLs that are in the same line but are after the offset
+                // Yield, if any, the URLs that are in the same line but starting from the offset
                 if (enumerator != null)
                 {
                     do
