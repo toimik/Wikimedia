@@ -153,10 +153,21 @@ namespace Toimik.Wikimedia
 
                     var urls = Extract(line);
                     enumerator = urls.GetEnumerator();
-                    while (enumerator.MoveNext()
-                        && index < offset)
+                    while (true)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
+                        var hasNext = enumerator.MoveNext();
+                        if (!hasNext)
+                        {
+                            enumerator = null;
+                            break;
+                        }
+
+                        if (index == offset)
+                        {
+                            break;
+                        }
+
                         index++;
                     }
                 }

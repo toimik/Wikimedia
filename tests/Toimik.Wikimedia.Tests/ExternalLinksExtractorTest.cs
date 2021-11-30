@@ -21,6 +21,16 @@
         }
 
         [Fact]
+        public async Task OffsetToBeyond()
+        {
+            var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
+
+            var offset = 3;
+            var results = await extractor.Extract($"{DataDirectory}externallinks.sql", offset).ToListAsync();
+            Assert.Empty(results);
+        }
+
+        [Fact]
         public async Task OffsetToFirst()
         {
             var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
