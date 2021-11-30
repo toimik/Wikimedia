@@ -68,7 +68,7 @@ var streamer = new ExternalLinksStreamer(
     new HttpClient(), // Ideally, a singleton should be used
     new V129ExternalLinksExtractor());
 // This example streams the external URL links from November 2021's English dataset
-var dataset = new Uri("http://dumps.wikimedia.org/enwiki/20211120/enwiki-20211120-externallinks.sql.gz";
+var dataset = new Uri("http://dumps.wikimedia.org/enwiki/20211120/enwiki-20211120-externallinks.sql.gz");
 await foreach (ExternalLinksExtractor.Result result in streamer.Stream(dataset))
 {
     ...
