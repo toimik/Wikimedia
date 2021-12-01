@@ -6,14 +6,14 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class ExternalLinksExtractorTest
+    public abstract class ExternalLinksExtractorTest
     {
-        private static readonly string DataDirectory = $"Data{Path.DirectorySeparatorChar}";
+        protected static readonly string DataDirectory = $"Data{Path.DirectorySeparatorChar}";
 
         [Fact]
         public async Task Empty()
         {
-            var extractor = new V129ExternalLinksExtractor();
+            var extractor = CreateExtractor();
 
             var results = await extractor.Extract($"{DataDirectory}empty.sql.gz").ToListAsync();
 
@@ -23,7 +23,7 @@
         [Fact]
         public async Task OffsetToBeyond()
         {
-            var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
+            var extractor = CreateExtractor(new DummyDecompressStreamFactory());
 
             var offset = 3;
             var results = await extractor.Extract($"{DataDirectory}externallinks.sql", offset).ToListAsync();
@@ -33,7 +33,7 @@
         [Fact]
         public async Task OffsetToFirst()
         {
-            var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
+            var extractor = CreateExtractor(new DummyDecompressStreamFactory());
             var expectedUrls = new List<string>
             {
                 "http://1a.example.com/bleedin\'",
@@ -51,7 +51,7 @@
         [Fact]
         public async Task OffsetToLast()
         {
-            var extractor = new V129ExternalLinksExtractor(new DummyDecompressStreamFactory());
+            var extractor = CreateExtractor(new DummyDecompressStreamFactory());
 
             var offset = 2;
             await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", offset))
@@ -60,5 +60,7 @@
                 Assert.Equal("//3a.example.com", result.Url);
             }
         }
+
+        protected abstract ExternalLinksExtractor CreateExtractor(DecompressStreamFactory decompressStreamFactory = null);
     }
 }
