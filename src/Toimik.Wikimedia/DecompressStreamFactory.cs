@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021 nurhafiz@hotmail.sg
+ * Copyright 2021-2022 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-namespace Toimik.Wikimedia
-{
-    using System.IO;
-    using System.IO.Compression;
+namespace Toimik.Wikimedia;
 
-    public class DecompressStreamFactory
+using System.IO;
+using System.IO.Compression;
+
+public class DecompressStreamFactory
+{
+    public virtual Stream CreateDecompressStream(Stream stream)
     {
-        public virtual Stream CreateDecompressStream(Stream stream)
-        {
-            return new GZipStream(
-               stream,
-               CompressionMode.Decompress,
-               leaveOpen: true);
-        }
+        return new GZipStream(
+           stream,
+           CompressionMode.Decompress,
+           leaveOpen: true);
     }
 }

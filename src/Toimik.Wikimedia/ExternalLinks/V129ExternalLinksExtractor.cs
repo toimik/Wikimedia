@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021 nurhafiz@hotmail.sg
+ * Copyright 2021-2022 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,68 +14,67 @@
  * limitations under the License.
  */
 
-namespace Toimik.Wikimedia
+namespace Toimik.Wikimedia;
+
+using System.Collections.Generic;
+
+/// <inheritdoc/>
+/// <remarks>
+/// This is customized for datasets that use schema version 1.29 and above.
+/// </remarks>
+public class V129ExternalLinksExtractor : ExternalLinksExtractor
 {
-    using System.Collections.Generic;
-
-    /// <inheritdoc/>
-    /// <remarks>
-    /// This is customized for datasets that use schema version 1.29 and above.
-    /// </remarks>
-    public class V129ExternalLinksExtractor : ExternalLinksExtractor
+    public V129ExternalLinksExtractor(DecompressStreamFactory? decompressStreamFactory = null)
+        : base(decompressStreamFactory)
     {
-        public V129ExternalLinksExtractor(DecompressStreamFactory decompressStreamFactory = null)
-            : base(decompressStreamFactory)
-        {
-        }
+    }
 
-        protected override IEnumerable<string> Extract(string line)
-        {
-            // e.g. INSERT INTO `externallinks` VALUES
-            // (...,...,'...','...','...')[,(...,...,'...','...','...')]*;
+    protected override IEnumerable<string> Extract(string line)
+    {
+        // e.g. INSERT INTO `externallinks` VALUES
+        // (...,...,'...','...','...')[,(...,...,'...','...','...')]*;
 
-            // Skip the prefix
-            line = line[Prefix.Length..];
-            do
+        // Skip the prefix
+        line = line[Prefix.Length..];
+        do
+        {
+            // Skip the opening parenthesis
+            line = line[1..];
+
+            // Skip the first column
+            var commaIndex = line.IndexOf(',');
+            line = line[(commaIndex + 1)..];
+
+            // Skip the second column and the opening single quote
+            commaIndex = line.IndexOf(',');
+            line = line[(commaIndex + 2)..];
+
+            // Yield the third column
+            var extractedLink = ExtractLink(line);
+            yield return extractedLink.Escaped;
+
+            // Skip the fourth and fifth columns
+            for (int i = 0; i < 2; i++)
             {
-                // Skip the opening parenthesis
-                line = line[1..];
-
-                // Skip the first column
-                var commaIndex = line.IndexOf(',');
-                line = line[(commaIndex + 1)..];
-
-                // Skip the second column and the opening single quote
+                line = line[(extractedLink.Unescaped.Length + 1)..];
                 commaIndex = line.IndexOf(',');
                 line = line[(commaIndex + 2)..];
-
-                // Yield the third column
-                var extractedLink = ExtractLink(line);
-                yield return extractedLink.Escaped;
-
-                // Skip the fourth and fifth columns
-                for (int i = 0; i < 2; i++)
-                {
-                    line = line[(extractedLink.Unescaped.Length + 1)..];
-                    commaIndex = line.IndexOf(',');
-                    line = line[(commaIndex + 2)..];
-                    extractedLink = ExtractLink(line);
-                }
-
-                // Check if there is any more values. If there is, the first character starts with a
-                // comma. Otherwise, it starts with a semi-colon.
-                line = line[(extractedLink.Unescaped.Length + 2)..];
-                if (line.StartsWith(';'))
-                {
-                    break;
-                }
-
-                // Remove the comma
-                line = line[1..];
-
-                // Repeat the process by continuing with the loop
+                extractedLink = ExtractLink(line);
             }
-            while (true);
+
+            // Check if there is any more values. If there is, the first character starts with a
+            // comma. Otherwise, it starts with a semi-colon.
+            line = line[(extractedLink.Unescaped.Length + 2)..];
+            if (line.StartsWith(';'))
+            {
+                break;
+            }
+
+            // Remove the comma
+            line = line[1..];
+
+            // Repeat the process by continuing with the loop
         }
+        while (true);
     }
 }

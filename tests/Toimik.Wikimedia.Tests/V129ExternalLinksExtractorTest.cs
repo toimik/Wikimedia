@@ -1,12 +1,11 @@
-﻿namespace Toimik.Wikimedia.Tests
-{
-    using Toimik.Wikimedia;
+﻿namespace Toimik.Wikimedia.Tests;
 
-    public class V129ExternalLinksExtractorTest : ExternalLinksExtractorTest
+using Toimik.Wikimedia;
+
+public class V129ExternalLinksExtractorTest : ExternalLinksExtractorTest
+{
+    protected override ExternalLinksExtractor CreateExtractor(DecompressStreamFactory? decompressStreamFactory = null)
     {
-        protected override ExternalLinksExtractor CreateExtractor(DecompressStreamFactory decompressStreamFactory = null)
-        {
-            return new V129ExternalLinksExtractor(decompressStreamFactory);
-        }
+        return new V129ExternalLinksExtractor(decompressStreamFactory);
     }
 }

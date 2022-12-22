@@ -1,10 +1,9 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/toimik/Wikimedia/CI)
 ![Code Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/nurhafiz/b8b90b86301563c67f191b24f506ef15/raw/Wikimedia-coverage.json)
 ![Nuget](https://img.shields.io/nuget/v/Toimik.Wikimedia)
 
 # Toimik.Wikimedia
 
-.NET 5 C# [Wikimedia Downloads](https://dumps.wikimedia.org) processing tools.
+.NET 6 C# [Wikimedia Downloads](https://dumps.wikimedia.org) processing tools.
 
 ## Features
 
