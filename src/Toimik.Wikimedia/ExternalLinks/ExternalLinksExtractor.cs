@@ -126,7 +126,7 @@ public abstract class ExternalLinksExtractor(DecompressStreamFactory? decompress
         if (offset > 0)
         {
             IEnumerator<string>? enumerator = null;
-            while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
+            while ((line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false)) != null)
             {
                 if (!line.StartsWith(Prefix))
                 {
@@ -169,7 +169,7 @@ public abstract class ExternalLinksExtractor(DecompressStreamFactory? decompress
         }
 
         // Yield, if any, the rest of the URLs in the rest of the lines
-        while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
+        while ((line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false)) != null)
         {
             if (!line.StartsWith(Prefix))
             {
