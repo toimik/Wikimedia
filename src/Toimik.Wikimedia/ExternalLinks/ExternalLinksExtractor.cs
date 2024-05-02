@@ -193,7 +193,7 @@ public abstract class ExternalLinksExtractor(DecompressStreamFactory? decompress
         var startIndex = 0;
         do
         {
-            var quoteIndex = line.IndexOf("'", startIndex);
+            var quoteIndex = line.IndexOf('\'', startIndex);
             var precedingCharacters = line.Substring(quoteIndex - 1, 1);
             if (!precedingCharacters.Equals("\\"))
             {
