@@ -16,7 +16,7 @@
 
 namespace Toimik.Wikimedia;
 
-public struct ExtractedLink(string unescaped, string escaped)
+public readonly struct ExtractedLink(string unescaped, string escaped)
 {
     public string Escaped { get; } = escaped;
 
