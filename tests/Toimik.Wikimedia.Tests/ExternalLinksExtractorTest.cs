@@ -15,7 +15,7 @@ public abstract class ExternalLinksExtractorTest
     {
         var extractor = CreateExtractor();
 
-        var results = await extractor.Extract($"{DataDirectory}empty.sql.gz").ToListAsync().ConfigureAwait(false);
+        var results = await extractor.Extract($"{DataDirectory}empty.sql.gz").ToListAsync();
 
         Assert.Empty(results);
     }
@@ -26,7 +26,7 @@ public abstract class ExternalLinksExtractorTest
         var extractor = CreateExtractor(new DummyDecompressStreamFactory());
 
         var offset = 3;
-        var results = await extractor.Extract($"{DataDirectory}externallinks.sql", offset).ToListAsync().ConfigureAwait(false);
+        var results = await extractor.Extract($"{DataDirectory}externallinks.sql", offset).ToListAsync();
         Assert.Empty(results);
     }
 
@@ -41,7 +41,7 @@ public abstract class ExternalLinksExtractorTest
             "//3a.example.com",
         };
 
-        await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql").ConfigureAwait(false))
+        await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql"))
         {
             var expectedUrl = expectedUrls[result.Index];
             Assert.Equal(expectedUrl, result.Url);
@@ -54,7 +54,7 @@ public abstract class ExternalLinksExtractorTest
         var extractor = CreateExtractor(new DummyDecompressStreamFactory());
 
         var offset = 2;
-        await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", offset).ConfigureAwait(false))
+        await foreach (ExternalLinksExtractor.Result result in extractor.Extract($"{DataDirectory}externallinks.sql", offset))
         {
             Assert.Equal(offset, result.Index);
             Assert.Equal("//3a.example.com", result.Url);
