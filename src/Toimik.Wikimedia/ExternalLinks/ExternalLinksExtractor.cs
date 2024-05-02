@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021-2022 nurhafiz@hotmail.sg
+ * Copyright 2021-2024 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,23 +27,22 @@ using System.Threading.Tasks;
 /// Represents a class that extracts URLs from Wikimedia's "externallinks" datasets.
 /// </summary>
 /// <remarks>
-/// Wikimedia - the owner of Wikipedia - provides free copies of Wikipedia's periodic datasets,
-/// some of which are collections of URLs that point to third parties' resources.
+/// Wikimedia - the owner of Wikipedia - provides free copies of Wikipedia's periodic datasets, some
+/// of which are collections of URLs that point to third parties' resources.
 /// <para>
-/// The datasets are listed at https://dumps.wikimedia.org/backup-index.html and are also
-/// available via their mirrors at https://dumps.wikimedia.org/mirrors.html.
+/// The datasets are listed at https://dumps.wikimedia.org/backup-index.html and are also available
+/// via their mirrors at https://dumps.wikimedia.org/mirrors.html.
 /// </para>
 /// <para>
-/// Of particular interest are datasets whose filename is suffixed with "externallinks.sql.gz"
-/// and prefixed with "&lt;xx&gt;wiki" where "&lt;xx&gt;" is the first two / three
-/// language-specific characters. e.g. <c>enwiki...externallinks.sql.gz</c>,
-/// <c>ruwiki...externallinks.sql.gz</c>.
+/// Of particular interest are datasets whose filename is suffixed with "externallinks.sql.gz" and
+/// prefixed with "&lt;xx&gt;wiki" where "&lt;xx&gt;" is the first two / three language-specific
+/// characters. e.g. <c>enwiki...externallinks.sql.gz</c>, <c>ruwiki...externallinks.sql.gz</c>.
 /// </para>
 /// <para>
-/// As the filename's extension implies, each link points to an SQL file that is compressed
-/// using GZip. Specifically, each is a MySQL script to be fed to a MySQL program, which will
-/// auto-decompress the file to create and populate a table based on the respective schema
-/// detailed at https://www.mediawiki.org/wiki/Manual:Externallinks_table.
+/// As the filename's extension implies, each link points to an SQL file that is compressed using
+/// GZip. Specifically, each is a MySQL script to be fed to a MySQL program, which will
+/// auto-decompress the file to create and populate a table based on the respective schema detailed
+/// at https://www.mediawiki.org/wiki/Manual:Externallinks_table.
 /// </para>
 /// <para>
 /// However, this class extracts the URLs without importing them to MySQL at all so as to avoid
@@ -51,33 +50,27 @@ using System.Threading.Tasks;
 /// </para>
 /// <strong>Parsing</strong>
 /// <para>
-/// As the schema has changed over the years, it is assumed that it may be changed again in
-/// future. Thus, this class serves as the base class for current and future implementations.
+/// As the schema has changed over the years, it is assumed that it may be changed again in future.
+/// Thus, this class serves as the base class for current and future implementations.
 /// </para>
 /// <para>
 /// It is assumed that the relevant lines start exactly with <c>INSERT INTO `externallinks`
-/// VALUES</c> and may contain multiple comma-separated values in the form of <c>(...),
-/// (...)</c>.
+/// VALUES</c> and may contain multiple comma-separated values in the form of <c>(...), (...)</c>.
 /// </para>
 /// <para>
-/// Additionally, it is assumed that single quotes are used to enclose the URLs. As such,
-/// literal single quotes are escaped like this: <c>\'</c>.
+/// Additionally, it is assumed that single quotes are used to enclose the URLs. As such, literal
+/// single quotes are escaped like this: <c>\'</c>.
 /// </para>
 /// <para>
-/// The values are extracted as-is without any validation or detection of duplicates. Also, it
-/// is not guaranteed that all of them are absolute URLs.
+/// The values are extracted as-is without any validation or detection of duplicates. Also, it is
+/// not guaranteed that all of them are absolute URLs.
 /// </para>
 /// </remarks>
-public abstract class ExternalLinksExtractor
+public abstract class ExternalLinksExtractor(DecompressStreamFactory? decompressStreamFactory = null)
 {
     protected const string Prefix = "INSERT INTO `externallinks` VALUES ";
 
-    protected ExternalLinksExtractor(DecompressStreamFactory? decompressStreamFactory = null)
-    {
-        DecompressStreamFactory = decompressStreamFactory ?? new DecompressStreamFactory();
-    }
-
-    public DecompressStreamFactory DecompressStreamFactory { get; }
+    public DecompressStreamFactory DecompressStreamFactory { get; } = decompressStreamFactory ?? new DecompressStreamFactory();
 
     /// <summary>
     /// Extracts, for this instance, all URLs.
@@ -85,15 +78,9 @@ public abstract class ExternalLinksExtractor
     /// <param name="path">
     /// The absolute path to a local <c>externallinks.sql.gz</c> file to extract URLs from.
     /// </param>
-    /// <param name="offset">
-    /// The offset of the URLs to start from.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// Optional token to monitor for cancellation request.
-    /// </param>
-    /// <returns>
-    /// <see cref="Result"/>(s).
-    /// </returns>
+    /// <param name="offset">The offset of the URLs to start from.</param>
+    /// <param name="cancellationToken">Optional token to monitor for cancellation request.</param>
+    /// <returns><see cref="Result"/>(s).</returns>
     public async IAsyncEnumerable<Result> Extract(
         string path,
         int offset = 0,
@@ -116,15 +103,9 @@ public abstract class ExternalLinksExtractor
     /// <param name="stream">
     /// The <see cref="Stream"/> of the <c>externallinks.sql.gz</c> file to extract URLs from.
     /// </param>
-    /// <param name="offset">
-    /// The offset of the URLs to start from.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// Optional token to monitor for cancellation request.
-    /// </param>
-    /// <returns>
-    /// <see cref="Result"/>(s).
-    /// </returns>
+    /// <param name="offset">The offset of the URLs to start from.</param>
+    /// <param name="cancellationToken">Optional token to monitor for cancellation request.</param>
+    /// <returns><see cref="Result"/>(s).</returns>
     public async IAsyncEnumerable<Result> Extract(
         Stream stream,
         int offset = 0,
@@ -234,18 +215,12 @@ public abstract class ExternalLinksExtractor
 
     protected abstract IEnumerable<string> Extract(string line);
 
-    public readonly struct Result
+    public readonly struct Result(int index, string url)
     {
-        public Result(int index, string url)
-        {
-            Index = index;
-            Url = url;
-        }
-
-        public int Index { get; }
+        public int Index { get; } = index;
 
         // NOTE: It is observed that this value can be absolute, relative or incorrect (use of
         // forward slashes) but self-correcting when creating a Uri
-        public string Url { get; }
+        public string Url { get; } = url;
     }
 }

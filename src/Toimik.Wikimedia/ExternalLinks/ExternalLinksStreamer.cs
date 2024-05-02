@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021-2022 nurhafiz@hotmail.sg
+ * Copyright 2021-2024 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 /// <summary>
-/// Represents a class to stream URLs via HTTP from publicly available Wikimedia Downloads'
-/// datasets.
+/// Represents a class to stream URLs via HTTP from publicly available Wikimedia Downloads' datasets.
 /// </summary>
-public sealed class ExternalLinksStreamer
+public sealed class ExternalLinksStreamer(HttpClient httpClient, ExternalLinksExtractor extractor)
 {
-    public ExternalLinksStreamer(HttpClient httpClient, ExternalLinksExtractor extractor)
-    {
-        HttpClient = httpClient;
-        Extractor = extractor;
-    }
+    public ExternalLinksExtractor Extractor { get; } = extractor;
 
-    public ExternalLinksExtractor Extractor { get; }
-
-    public HttpClient HttpClient { get; }
+    public HttpClient HttpClient { get; } = httpClient;
 
     /// <summary>
     /// Streams, for this instance, all URLs.
@@ -46,20 +39,13 @@ public sealed class ExternalLinksStreamer
     /// <param name="dataset">
     /// The <see cref="Uri"/> of the <c>externallinks.sql.gz</c> file to extract URLs from.
     /// </param>
-    /// <param name="offset">
-    /// The offset of the URLs to start from.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// Optional token to monitor for cancellation request.
-    /// </param>
-    /// <returns>
-    /// <see cref="ExternalLinksExtractor.Result"/>(s).
-    /// </returns>
+    /// <param name="offset">The offset of the URLs to start from.</param>
+    /// <param name="cancellationToken">Optional token to monitor for cancellation request.</param>
+    /// <returns><see cref="ExternalLinksExtractor.Result"/>(s).</returns>
     /// <remarks>
     /// <para>
     /// <strong>Known Issue</strong> Streaming some large files over <c>HTTPS</c> may throw a
-    /// <c>System.IO.IOException : Received an unexpected EOF or 0 bytes from the transport
-    /// stream</c>.
+    /// <c>System.IO.IOException : Received an unexpected EOF or 0 bytes from the transport stream</c>.
     /// </para>
     /// <para>If that happens, use <c>HTTP</c> instead.</para>
     /// </remarks>

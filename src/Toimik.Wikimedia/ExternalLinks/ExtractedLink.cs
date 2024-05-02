@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021-2022 nurhafiz@hotmail.sg
+ * Copyright 2021-2024 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,9 @@
 
 namespace Toimik.Wikimedia;
 
-public struct ExtractedLink
+public struct ExtractedLink(string unescaped, string escaped)
 {
-    public ExtractedLink(string unescaped, string escaped)
-    {
-        Unescaped = unescaped;
-        Escaped = escaped;
-    }
+    public string Escaped { get; } = escaped;
 
-    public string Escaped { get; }
-
-    public string Unescaped { get; }
+    public string Unescaped { get; } = unescaped;
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2021-2022 nurhafiz@hotmail.sg
+ * Copyright 2021-2024 nurhafiz@hotmail.sg
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,12 @@ namespace Toimik.Wikimedia;
 using System.Collections.Generic;
 
 /// <inheritdoc/>
-/// <remarks>
-/// This is customized for datasets that use schema version 1.29 and above.
-/// </remarks>
-public class V129ExternalLinksExtractor : ExternalLinksExtractor
+/// <remarks>This is customized for datasets that use schema version 1.29 and above.</remarks>
+public class V129ExternalLinksExtractor(DecompressStreamFactory? decompressStreamFactory = null) : ExternalLinksExtractor(decompressStreamFactory)
 {
-    public V129ExternalLinksExtractor(DecompressStreamFactory? decompressStreamFactory = null)
-        : base(decompressStreamFactory)
-    {
-    }
-
     protected override IEnumerable<string> Extract(string line)
     {
-        // e.g. INSERT INTO `externallinks` VALUES
-        // (...,...,'...','...','...')[,(...,...,'...','...','...')]*;
+        // e.g. INSERT INTO `externallinks` VALUES (...,...,'...','...','...')[,(...,...,'...','...','...')]*;
 
         // Skip the prefix
         line = line[Prefix.Length..];
