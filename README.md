@@ -3,7 +3,7 @@
 
 # Toimik.Wikimedia
 
-.NET 6 C# [Wikimedia Downloads](https://dumps.wikimedia.org) processing tools.
+.NET 8 C# [Wikimedia Downloads](https://dumps.wikimedia.org) processing tools.
 
 ## Features
 
